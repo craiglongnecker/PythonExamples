@@ -1,6 +1,9 @@
+# Importing packages and creating aliases for the packages
 import datetime as dt
 import matplotlib.pyplot as plt
 from matplotlib import style
+from mpl_finance import candlestick_ohlc
+import matplotlib.dates as mdates
 import pandas as pd
 import pandas_datareader.data as web
 
@@ -36,11 +39,17 @@ df = pd.read_csv('tsla.csv', parse_dates = True, index_col = 0) # Read .csv file
 
 df_ohlc = df['Adj Close'].resample('10D').ohlc() # Data frame for Adjusted Close resampled over 10 days for open, high, low, and close
 df_volume = df['Volume'].resample('10D').sum() # Data frame for Volume resampled over 10 days for sum
-print(df_ohlc.head())
-
+df_ohlc.reset_index(inplace = True)
+#print(df_ohlc.head())
+df_ohlc['Date'] = df_ohlc['Date'].map(mdates.date2num)
 
 ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan = 5, colspan = 1) # Create subplot ax1
 ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan = 1, colspan = 1, sharex = ax1) # Create subplot ax2 and share with ax1
+ax1.xaxis_date() # Take end dates and display as nice dates
+
+candlestick_ohlc(ax1, df_ohlc.values, width = 2, colorup = 'g') # Takes ax1 and creates values
+ax2.fill_between(df_volume.index.map(mdates.date2num), df_volume.values, 0) # Fills values x from 0 to y
+plt.show()
 
 #ax1.plot(df.index, df['Adj Close']) # Plot Adjusted Close line graph in red
 #ax1.plot(df.index, df['100ma']) # Plot 100 Moving Average line graph in blue

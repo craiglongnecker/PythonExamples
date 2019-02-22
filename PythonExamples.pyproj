@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>11891feb-0770-4db2-9b7f-2022482855a9</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>FinanceExample.py</StartupFile>
+    <StartupFile>SandP500.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,9 @@
   <ItemGroup>
     <Compile Include="BusinessExample.py" />
     <Compile Include="FinanceExample.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SandP500.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

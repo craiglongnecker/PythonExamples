@@ -45,7 +45,7 @@ df_ohlc['Date'] = df_ohlc['Date'].map(mdates.date2num)
 
 ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan = 5, colspan = 1) # Create subplot ax1
 ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan = 1, colspan = 1, sharex = ax1) # Create subplot ax2 and share with ax1
-ax1.xaxis_date() # Take end dates and display as nice dates
+ax1.xaxis_date() # Take end dates and displays as nice dates
 
 candlestick_ohlc(ax1, df_ohlc.values, width = 2, colorup = 'g') # Takes ax1 and creates values
 ax2.fill_between(df_volume.index.map(mdates.date2num), df_volume.values, 0) # Fills values x from 0 to y

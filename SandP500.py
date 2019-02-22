@@ -84,26 +84,26 @@ def visualize_data(): # Create visualize_data function
     #df['AAPL'].plot() # Plot Apple
     #plt.show() # Show graph of Apple
     df_corr = df.corr() # Create correlation table
-    print(df_corr.head())
+    print(df_corr.head()) # Print head correlations
     data = df_corr.values
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
 
     # Create custom correlation graph
-    heatmap = ax.pcolor(data, cmap = plt.cm.RdYlGn)
+    heatmap = ax.pcolor(data, cmap = plt.cm.RdYlGn) # Create heatmap
     fig.colorbar(heatmap)
-    ax.set_xticks(np.arange(data.shape[0]) + 0.5, minor = False)
-    ax.set_yticks(np.arange(data.shape[1]) + 0.5, minor = False)
-    ax.invert_yaxis()
-    ax.xaxis.tick_top()
+    ax.set_xticks(np.arange(data.shape[0]) + 0.5, minor = False) # Set x ticks
+    ax.set_yticks(np.arange(data.shape[1]) + 0.5, minor = False) # Set y ticks
+    ax.invert_yaxis() # Invert y axis
+    ax.xaxis.tick_top() # Place tick at top of x axis
     
-    column_labels = df_corr.columns
-    row_labels = df_corr.index
+    column_labels = df_corr.columns # Create column labels
+    row_labels = df_corr.index # Create row labels
 
-    ax.set_xticklabels(column_labels)
-    ax.set_yticklabels(row_labels)
-    plt.xticks(rotation = 90)
-    heatmap.set_clim(-1, 1)
+    ax.set_xticklabels(column_labels) # Set x tick labels
+    ax.set_yticklabels(row_labels) # Set y tick labels
+    plt.xticks(rotation = 90) # Rotate x tick labels
+    heatmap.set_clim(-1, 1) # Set heatmap limits
     plt.tight_layout()
     plt.show() # Show correlation graph
 

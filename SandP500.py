@@ -23,28 +23,54 @@ def save_sp500_tickers(): # Create save_sp500_tickers function
 
     return tickers
 
-#save_sp500_tickers()
+#save_sp500_tickers() # Run save_sp500_tickers() function
 
-def get_data_from_yahoo(reload_sp500 = False):
+def get_data_from_yahoo(reload_sp500 = False): # Create get_data_from_yahoo function
 
-    if reload_sp500:
+    if reload_sp500: # If statement
         tickers = save_sp500_tickers()
-    else:
-         with open("sp500tickers.pickle", "rb") as f:
+    else: # Else statement
+         with open("sp500tickers.pickle", "rb") as f: # read file with pickle.load
              tickers = pickle.load(f)
 
-    if not os.path.exists('stock_dfs'):
+    if not os.path.exists('stock_dfs'): # if statement
         os.makedirs('stock_dfs')
 
     start = dt.datetime(2009, 1, 1) # Start date
     end = dt.datetime(2018, 12, 31) # End date
 
-    for ticker in tickers:
+    for ticker in tickers: # For loop
         print(ticker)
-        if not os.path.exists('stock_dfs/{}.csv'.format(ticker)):
-            df = web.DataReader(ticker, 'yahoo', start, end)
-            df.to_csv('stock_dfs/{}.csv'.format(ticker))
-        else:
+        if not os.path.exists('stock_dfs/{}.csv'.format(ticker)): # If not statement to create .csv files for each S&P 500 company
+            df = web.DataReader(ticker, 'yahoo', start, end) # Set up data frame using S&P 500
+            df.to_csv('stock_dfs/{}.csv'.format(ticker)) # Create .csv file for each S&P 500 company
+        else: # Else statement
             print('Already have {}'.format(ticker))
 
-get_data_from_yahoo()
+#get_data_from_yahoo() # Run get_data_from_yahoo() function
+
+def compile_data(): # Create compile_data function
+    with open("sp500tickers.pickle", "rb") as f: # read file with pickle.load
+        tickers = pickle.load(f)
+
+    main_df = pd.DataFrame() # Main data frame
+
+    for count, ticker in enumerate(tickers): # For loop
+        df = pd.read_csv('stock_dfs/{}.csv'.format(ticker)) # Read each S&P 500 company .csv file
+        df.set_index('Date', inplace = True)
+        df.rename(columns = {'Adj Close': ticker}, inplace = True) # Rename Adjusted Close to ticker
+        df.drop(['Open', 'High', 'Low', 'Close', 'Volume'], 1, inplace = True) # Set up columns
+
+        if main_df.empty: # If statement
+            main_df = df
+        else: # Else statement
+            main_df = main_df.join(df, how = 'outer')
+
+        if count % 10 == 0: # If statement counting using remainder of 10
+            print(count)
+
+    print(main_df.head())
+    main_df.to_csv('sp500_joined_closes.csv') # Create sp500_joined_closes.csv file
+
+compile_data() # Run compile_data function
+

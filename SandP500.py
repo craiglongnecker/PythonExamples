@@ -1,11 +1,16 @@
 # Importing packages and creating aliases for the packages
 import bs4 as bs
 import datetime as dt
+import matplotlib.pyplot as plt
+from matplotlib import style
+import numpy as np
 import os
 import pandas as pd
 import pandas_datareader.data as web
 import pickle
 import requests
+
+style.use('ggplot') # Style type
 
 def save_sp500_tickers(): # Create save_sp500_tickers function
     resp = requests.get('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies') # Built-in module response
@@ -72,5 +77,34 @@ def compile_data(): # Create compile_data function
     print(main_df.head())
     main_df.to_csv('sp500_joined_closes.csv') # Create sp500_joined_closes.csv file
 
-compile_data() # Run compile_data function
+#compile_data() # Run compile_data function
 
+def visualize_data(): # Create visualize_data function
+    df = pd.read_csv('sp500_joined_closes.csv')
+    #df['AAPL'].plot() # Plot Apple
+    #plt.show() # Show graph of Apple
+    df_corr = df.corr() # Create correlation table
+    print(df_corr.head())
+    data = df_corr.values
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+
+    # Create custom correlation graph
+    heatmap = ax.pcolor(data, cmap = plt.cm.RdYlGn)
+    fig.colorbar(heatmap)
+    ax.set_xticks(np.arange(data.shape[0]) + 0.5, minor = False)
+    ax.set_yticks(np.arange(data.shape[1]) + 0.5, minor = False)
+    ax.invert_yaxis()
+    ax.xaxis.tick_top()
+    
+    column_labels = df_corr.columns
+    row_labels = df_corr.index
+
+    ax.set_xticklabels(column_labels)
+    ax.set_yticklabels(row_labels)
+    plt.xticks(rotation = 90)
+    heatmap.set_clim(-1, 1)
+    plt.tight_layout()
+    plt.show() # Show correlation graph
+
+visualize_data() # Run visualize_data function
